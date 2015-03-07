@@ -27,22 +27,28 @@
 			
 			<div id="menu">
 				<span class="menu_item"> <a href="#news">News</a> </span>
-				<span class="delim">&middot;</span>
+				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#description">Description</a> </span>
-				<span class="delim">&middot;</span>
+				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#installation">Installation</a> </span>
-				<span class="delim">&middot;</span>
+				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#configuration">Configuration</a> </span>
-				<span class="delim">&middot;</span>
+				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#usage">Usage</a> </span>
-				<span class="delim">&middot;</span>
+				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#download">Download</a> </span>
-				<span class="delim">&middot;</span>
-				<span class="menu_item"> <a href="#applications">Applications</a> </span>
 			</div>
 
 			<h2 id="news">News</h2>
 			<div class="content_section">
+				<p>
+					<strong>2015-03-07</strong> &#8212; Version <strong>2.2.0</strong> released.
+				</p>
+
+				<p>
+					<strong>2015-01-17</strong> &#8212; Version <strong>2.1.2</strong> released.
+				</p>
+
 				<p>
 					<strong>2015-01-04</strong> &#8212; Version <strong>2.1.1</strong> released.
 				</p>
@@ -64,10 +70,11 @@
 			<div class="content_section">
 				<p> <em>etherpoke</em> is a scriptable network session monitor.</p>
 		
-				<p> <em>etherpoke</em> defines two events: <strong>SESSION_BEGIN</strong>, <strong>SESSION_END</strong> to which a hook (system command) can be assigned. The event hook can be any program installed in the system.</p>
+				<p> <em>etherpoke</em> defines three events: <strong>SESSION_BEGIN</strong>, <strong>SESSION_END</strong>, <strong>SESSION_ERROR</strong> to which a hook (system command) can be assigned. The event hook can be any program installed in the system.</p>
 					
 				<p> <strong>SESSION_BEGIN</strong> is triggered when the first packet matching the filter rule is captured.</p>
 				<p> <strong>SESSION_END</strong> is triggered when the time since the last matching packet was captured exceeds the session timeout.</p>
+				<p> <strong>SESSION_ERROR</strong> is triggered when it is no longer possible to proceed with packet capture, most likely due to network interface error. This event cancels out any future triggers of <strong>SESSION_END</strong>, until <strong>SESSION_BEGIN</strong> is triggered again.</p>
 	
 				<p> <em>etherpoke</em> is <strong>free software</strong> licensed under <strong>GNU GPL3</strong>. </p>
 			</div>
@@ -143,27 +150,13 @@ Options:
 				</p>
 				
 				<ul>
+					<li> <a href="files/etherpoke-2.2.0.tar.gz">etherpoke-2.2.0.tar.gz</a> (<a href="files/etherpoke-2.2.0.tar.gz.sig">signature</a>) </li>
+					<li> <a href="files/etherpoke-2.1.2.tar.gz">etherpoke-2.1.2.tar.gz</a> (<a href="files/etherpoke-2.1.2.tar.gz.sig">signature</a>) </li>
 					<li> <a href="files/etherpoke-2.1.1.tar.gz">etherpoke-2.1.1.tar.gz</a> (<a href="files/etherpoke-2.1.1.tar.gz.sig">signature</a>) </li>
 					<li> <a href="files/etherpoke-2.1.0.tar.gz">etherpoke-2.1.0.tar.gz</a> (<a href="files/etherpoke-2.1.0.tar.gz.sig">signature</a>) </li>
 					<li> <a href="files/etherpoke-2.0.2.tar.gz">etherpoke-2.0.2.tar.gz</a> (<a href="files/etherpoke-2.0.2.tar.gz.sig">signature</a>)</li>
 				</ul>
 			</div>
-
-			<h2 id="applications">Applications</h2>
-			<div class="content_section">
-				<p>The main motivation behind <em>etherpoke</em> is to carry out tasks automatically when a device (presumably a mobile one)
-				becomes present in <strong>WLAN</strong> (<strong>W</strong>ireless <strong>L</strong>ocal <strong>A</strong>rea <strong>N</strong>etwork).
-				The mobile device connected to network can be think of as a user's shadow projected in cyberspace, it opens new possibilities
-				for applications.</p>
-				
-				<p> <em>etherpoke</em> <strong>IS NOT</strong> a user application but rather a utility, a building block if you will, which ought to be used
-				in conjuction with other tools by system administrator. There is a preliminary expectation to understand workings of computer networks in order to
-				deploy <em>etherpoke</em> successfully. If you plan to install <em>etherpoke</em> on your workstation, you will probably not get results you expect, that is
-				to capture packets of other devices in network. The setup depends on architecture of your network and control devices involved (switch vs hub).</p>
-				
-				<p> <strong>Future plans</strong> involve porting <em>etherpoke</em> on other platforms (namely <strong>ARM</strong>), a package for <a href="https://openwrt.org/">OpenWrt</a> and plugin for <a href="http://luci.subsignal.org/trac">LuCi</a> - web based configuration interface for embedded devices.</p>
-			</div>
-
 		</div>
 	</body>
 </html>
