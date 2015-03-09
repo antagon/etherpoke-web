@@ -2,8 +2,10 @@
 	<head>
 		<title>etherpoke</title>
 		<style>
+			body { font-size:14px; }
 			h1 { font-size:32px; font-family:Helvetica; margin-bottom:25px; }
-			h2 { font-size:18px; font-family:Helvetica; margin-bottom:5px; padding-bottom:10px; border-bottom:1px dashed #939393; }
+			h2 { font-size:20px; font-family:Helvetica; margin-bottom:5px; padding-bottom:5px; border-bottom:1px solid #939393; }
+			h3 { font-size:16px; font-family:Helvetica; margin-bottom:5px; padding-bottom:5px; }
 			a { color:#2D6FAC; }
 			a:visited { color:#2D6FAC; }
 			a:hover { text-decoration:none; }
@@ -15,9 +17,9 @@
 			#content { width:70%; margin:0 auto; }
 			#content .content_section { font-size:13px; padding:10px; margin-bottom:20px; }
 			#content pre { font-size:13px; font-family:Courier; padding:10px; background-color:#EFEFEF; white-space: pre-wrap; white-space:-moz-pre-wrap; white-space:-pre-wrap; white-space:-o-pre-wrap; word-wrap:break-word; }
-			#content li { list-style:square; margin-bottom:10px; }
+			#content li { list-style:square; padding:5px; }
 			#footer { font-size:12px; text-align:center; }
-			.cmd { background-color:#EFEFEF; font-family:Courier; padding:2px; }
+			.cmd { background-color:#EFEFEF; font-family:Courier; padding-left:4px; padding-right:4px; }
 		</style>
 	</head>
 	
@@ -70,13 +72,15 @@
 			<div class="content_section">
 				<p> <em>etherpoke</em> is a scriptable network session monitor.</p>
 		
-				<p> <em>etherpoke</em> defines three events: <strong>SESSION_BEGIN</strong>, <strong>SESSION_END</strong>, <strong>SESSION_ERROR</strong> to which a hook (system command) can be assigned. The event hook can be any program installed in the system.</p>
-					
-				<p> <strong>SESSION_BEGIN</strong> is triggered when the first packet matching the filter rule is captured.</p>
-				<p> <strong>SESSION_END</strong> is triggered when the time since the last matching packet was captured exceeds the session timeout.</p>
-				<p> <strong>SESSION_ERROR</strong> is triggered when it is no longer possible to proceed with packet capture, most likely due to network interface error. This event cancels out any future triggers of <strong>SESSION_END</strong>, until <strong>SESSION_BEGIN</strong> is triggered again.</p>
+				<p> <em>etherpoke</em> defines three events to which a hook (system command) can be assigned. The event hook can be any program installed in the system.</p>
+
+				<ul>
+					<li> <strong>SESSION_BEGIN</strong> is triggered when the first packet matching the filter rule is captured.</li>
+					<li> <strong>SESSION_END</strong> is triggered when the time since the last matching packet was captured exceeds the session timeout.</li>
+					<li> <strong>SESSION_ERROR</strong> is triggered when it is no longer possible to proceed with packet capture, most likely due to network interface error. This event cancels out any future triggers of <strong>SESSION_END</strong>, until <strong>SESSION_BEGIN</strong> is triggered again.</li>
+				</ul>
 	
-				<p> <em>etherpoke</em> is <strong>free software</strong> licensed under <strong>GNU GPL3</strong>. </p>
+				<p> <em>etherpoke</em> is <strong>free software</strong> licensed under <strong>GNU GPL3</strong>.</p>
 			</div>
 			
 			<h2 id="installation">Installation</h2>
@@ -84,9 +88,7 @@
 				<p>If <em>etherpoke</em> is not available in the repository of your favorite <strong>GNU/Linux</strong> distribution, you may
 				consider installing <em>etherpoke</em> from the source.</p>
 				
-				<p>
-					<strong>Installing from the source:</strong>
-				</p>
+				<h3>From the source:</h3>
 				
 				<ul>
 					<li>Download the source code.</li>
@@ -95,9 +97,7 @@
 					<li>Run <span class="cmd">make install</span> </span> </li>
 				</ul>
 				
-				<p>
-					<strong>Dependencies:</strong>
-				</p>
+				<h3>Dependencies:</h3>
 				
 				<ul>
 					<li>glibc &gt;= 2.0</li>
@@ -111,24 +111,36 @@
 				<p>
 					<em>etherpoke</em> uses <a href="http://www.hyperrealm.com/libconfig/">libconfig</a> for parsing the configuration file.
 				</p>
-				
+
+				<h3>Options</h3>
+
+				<ul>
+					<li> <span class="cmd">interface</span> tells which interface to use for the packet capture.</li>
+					<li> <span class="cmd">match</span> defines a packet filter program to use (see <a href="http://biot.com/capstats/bpf.html">BPF syntax</a>). If this option is ommited, all traffic captured by the <span class="cmd">interface</span> is available.</li>
+					<li> <span class="cmd">session_begin</span> defines a command that will be executed when the event <strong>SESSION_BEGIN</strong> is triggered.</li>
+					<li> <span class="cmd">session_end</span> defines a command that will be executed when the event <strong>SESSION_END</strong> is triggered.</li>
+					<li> <span class="cmd">session_error</span> defines a command that will be executed when the event <strong>SESSION_ERROR</strong> is triggered.</li>
+					<li> <span class="cmd">session_timeout</span> defines a session timeout in seconds. If the time specified is exceeded, the event <strong>SESSION_END</strong> is triggered.</li>
+					<li> <span class="cmd">monitor_mode</span> enables/disables the monitor mode. This mode is supported only by some Wireless network interfaces. By default, this mode is disabled.</li>
+					<li> <span class="cmd">link_type</span> overrides the default link-layer header type (<a href="http://www.tcpdump.org/linktypes.html#project-list">see the list</a>). Defaults: EN10MB, IEEE802_11_RADIO if <span class="cmd">monitor_mode</span> is enabled.</li>
+				</ul>
+
+				<h3>Example</h3>
+
 				<pre>
 jukebox: {
-	interface = "wlp3s0";
+	interface = "wlan1";
 	match = "ether src f8:2f:a8:b0:c9:11 or ether src 08:9e:01:f5:43:16";
 	session_begin = "/usr/bin/audacious /home/music/dxhr_adam_jensen_apartment.mp3";
 	session_end = "/usr/bin/audacious --stop";
 	session_error = "/bin/false";
 	session_timeout = 600;
-	monitor_mode = false;
+	monitor_mode = true;
 };
 </pre>
+				<p>This configuration states that we are interested only in packets originating from devices with hardware address <span class="cmd">f8:2f:a8:b0:c9:11</span> or <span class="cmd">08:9e:01:f5:43:16</span>, captured on the interface <span class="cmd">wlan1</span>. If the first packet from any of these devices is captured, music player will start playing the mp3 file. If no packets are captured for period longer than 10 minutes (600 seconds), the music player will stop.</p>
 
-				<p>
-					This rule states that if the packet originating from a device with hardware address <span class="cmd">f8:2f:a8:b0:c9:11</span> or <span class="cmd">08:9e:01:f5:43:16</span> is captured on network interface <span class="cmd">wlp3s0</span>, the music player will start playing a song.<br><br>
-					If both devices become inactive for a time period longer than 10 minutes (600 seconds), music will be paused.</p>
-
-				<p>Filter rules are written using <a href="http://biot.com/capstats/bpf.html">BPF syntax</a>.</p>	
+				<p>The packet capture is done in the monitor mode, so the devices can be detected from the regular personal computer. With monitor mode disabled, only broadcast IP packets and EAP/EAPOL packets could be captured, causing frequent session timeouts with target devices still communicating.</p>
 			</div>
 			
 			<h2 id="usage">Usage</h2>
