@@ -17,7 +17,8 @@
 			#content { width:70%; margin:0 auto; }
 			#content .content_section { font-size:13px; padding:10px; margin-bottom:20px; }
 			#content pre { font-size:13px; font-family:Courier; padding:10px; background-color:#EFEFEF; white-space: pre-wrap; white-space:-moz-pre-wrap; white-space:-pre-wrap; white-space:-o-pre-wrap; word-wrap:break-word; }
-			#content li { list-style:square; padding:5px; }
+			#content li { padding:5px; }
+			#content ul {  list-style:square; }
 			#footer { font-size:12px; text-align:center; }
 			.cmd { background-color:#EFEFEF; font-family:Courier; padding-left:4px; padding-right:4px; }
 		</style>
@@ -39,10 +40,20 @@
 				<span class="menu_item"> <a href="#usage">Usage</a> </span>
 				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#download">Download</a> </span>
+				<span class="delim">&nbsp;</span>
+				<span class="menu_item"> <a href="#acknowledgments">Acknowledgments</a> </span>
 			</div>
 
 			<h2 id="news">News</h2>
 			<div class="content_section">
+				<p>
+					<strong>2015-05-09</strong> &#8212; Version <strong>2.3.0</strong> released.
+				</p>
+
+				<p>
+					<strong>2015-05-09</strong> &#8212; Download section of the page lists only last version of each minor release, including the signature and changelog.
+				</p>
+
 				<p>
 					<strong>2015-05-05</strong> &#8212; Version <strong>2.2.1</strong> released.
 				</p>
@@ -83,6 +94,8 @@
 					<li> <strong>SESSION_END</strong> is triggered when the time since the last matching packet was captured exceeds the session timeout.</li>
 					<li> <strong>SESSION_ERROR</strong> is triggered when it is no longer possible to proceed with packet capture, most likely due to network interface error. This event cancels out any future triggers of <strong>SESSION_END</strong>, until <strong>SESSION_BEGIN</strong> is triggered again.</li>
 				</ul>
+
+				<p>Since version 2.3.0, <em>etherpoke</em> has support for socket notifications (<strong>TCP</strong> protocol), allowing remote clients to be notified when any of the events is triggered.</p>
 	
 				<p> <em>etherpoke</em> is <strong>free software</strong> licensed under <strong>GNU GPL3</strong>.</p>
 			</div>
@@ -94,19 +107,19 @@
 				
 				<h3>From the source:</h3>
 				
-				<ul>
+				<ol>
 					<li>Download the source code.</li>
 					<li>Extract the content of the archive.</li>
 					<li>Change current directory to extracted directory.</li>
-					<li>Run <span class="cmd">make install</span> </span> </li>
-				</ul>
-				
+					<li>Run <span class="cmd">make install</span> with root privileges.</span> </li>
+				</ol>
+
 				<h3>Dependencies:</h3>
 				
 				<ul>
 					<li>glibc &gt;= 2.0</li>
 					<li>libpcap &gt;= 1.0</li> 
-					<li>libconfig &gt;= **find.out**</li>
+					<li>libconfig</li>
 				</ul>
 			</div>
 			
@@ -126,13 +139,15 @@
 					<li> <span class="cmd">session_error</span> defines a command that will be executed when the event <strong>SESSION_ERROR</strong> is triggered.</li>
 					<li> <span class="cmd">session_timeout</span> defines a session timeout in seconds. If the time specified is exceeded, the event <strong>SESSION_END</strong> is triggered.</li>
 					<li> <span class="cmd">monitor_mode</span> enables/disables the monitor mode. This mode is supported only by some Wireless network interfaces. By default, this mode is disabled.</li>
-					<li> <span class="cmd">link_type</span> overrides the default link-layer header type (<a href="http://www.tcpdump.org/linktypes.html#project-list">see the list</a>). Defaults: EN10MB, IEEE802_11_RADIO if <span class="cmd">monitor_mode</span> is enabled.</li>
+					<li> <span class="cmd">notify_sock</span> enables/disables socket notification. By default socket notification is disabled.</li>
+					<li> <span class="cmd">notify_exec</span> enables/disables event hook execution. By default event hook execution is enabled.</li>
+					<li> <span class="cmd">link_type</span> overrides the default link-layer header type. Defaults: EN10MB, IEEE802_11_RADIO in case the <span class="cmd">monitor_mode</span> is enabled. Complete list of supported values can be found on <a href="http://www.tcpdump.org/linktypes.html#project-list">tcpdump homepage</a>.</li>
 				</ul>
 
-				<h3>Example</h3>
+				<h3>Example #1</h3>
 
 				<pre>
-jukebox: {
+ambient_jukebox: {
 	interface = "wlan1";
 	match = "ether src f8:2f:a8:b0:c9:11 or ether src 08:9e:01:f5:43:16";
 	session_begin = "/usr/bin/audacious /home/music/dxhr_adam_jensen_apartment.mp3";
@@ -140,39 +155,72 @@ jukebox: {
 	session_error = "/bin/false";
 	session_timeout = 600;
 	monitor_mode = true;
-};
-</pre>
+};</pre>
 				<p>This configuration states that we are interested only in packets originating from devices with hardware address <span class="cmd">f8:2f:a8:b0:c9:11</span> or <span class="cmd">08:9e:01:f5:43:16</span>, captured on the interface <span class="cmd">wlan1</span>. If the first packet from any of these devices is captured, music player will start playing the mp3 file. If no packets are captured for period longer than 10 minutes (600 seconds), the music player will stop.</p>
 
 				<p>The packet capture is done in the monitor mode, so the devices can be detected from the regular personal computer. With monitor mode disabled, only broadcast IP packets and EAP/EAPOL packets could be captured, causing frequent session timeouts with target devices still communicating.</p>
+
+				<h3>Example #2</h3>
+
+				<pre>
+pipboy3000: {
+	interface = "wlan1";
+	match = "ether src 48:9d:24:66:a7:97";
+	session_begin = "/bin/false";
+	session_end = "/bin/false";
+	session_error = "/bin/false";
+	session_timeout = 600;
+	monitor_mode = true;
+	notify_exec = false;
+	notify_sock = true;
+};</pre>
+				<p>
+					The configuration above showcases the TCP notifications. We are looking for data originating from a device with hardware address <span class="cmd">48:9d:24:66:a7:97</span>, captured on the interface <span class="cmd">wlan1</span>. Unlike the previous example, this one disables execution of defined event hooks with option <span class="cmd">notify_exec</span> set to false, and instead enables the socket notifications with option <span class="cmd">notify_sock</span> set to true. When any of the events is triggered, a message is delivered to connected clients.
+				</p>
+
+				<p>
+					Please note, that <em>etherpoke</em> does not open TCP port automatically, instead it expects an argument to be provided on its start, which specifies the port number. See <a href="#usage">Usage</a> for more information.
+				</p>
 			</div>
-			
+
 			<h2 id="usage">Usage</h2>
 			<div class="content_section">
 				<pre>
-etherpoke [-dhv] -f &lt;FILE&gt;
+Usage: etherpoke [OPTIONS] &lt;FILE&gt;
 
 Options:
-  -f &lt;FILE&gt;	configuration file
-  -d		run as a daemon
-  -h		show this help text
-  -v		show version information</pre>
-  
+  -d, --daemon          run as a daemon
+  -l, --listen=NUM      TCP port to use for inbound client connections
+  -m, --accept-max=NUM  accept maximum NUM of concurrent client connections
+  -h, --help            show this usage information
+  -v, --version         show version information</pre>
 			</div>
-			
+
 			<h2 id="download">Download</h2>
 			<div class="content_section">
 				<p>
-					Latest changes are always available in <em>etherpoke</em>'s Git <a href="https://github.com/erlcash/etherpoke">repository</a>.
+					<a href="https://github.com/erlcash/etherpoke">Latest changes</a> and all <a href="https://github.com/erlcash/etherpoke/releases">version releases</a> are always available in <em>etherpoke</em>'s git repository</a>.
 				</p>
 				
 				<ul>
-					<li> <a href="files/etherpoke-2.2.1.tar.gz">etherpoke-2.2.1.tar.gz</a> (<a href="files/etherpoke-2.2.1.tar.gz.sig">signature</a>) </li>
-					<li> <a href="files/etherpoke-2.2.0.tar.gz">etherpoke-2.2.0.tar.gz</a> (<a href="files/etherpoke-2.2.0.tar.gz.sig">signature</a>) </li>
-					<li> <a href="files/etherpoke-2.1.2.tar.gz">etherpoke-2.1.2.tar.gz</a> (<a href="files/etherpoke-2.1.2.tar.gz.sig">signature</a>) </li>
-					<li> <a href="files/etherpoke-2.1.1.tar.gz">etherpoke-2.1.1.tar.gz</a> (<a href="files/etherpoke-2.1.1.tar.gz.sig">signature</a>) </li>
-					<li> <a href="files/etherpoke-2.1.0.tar.gz">etherpoke-2.1.0.tar.gz</a> (<a href="files/etherpoke-2.1.0.tar.gz.sig">signature</a>) </li>
-					<li> <a href="files/etherpoke-2.0.2.tar.gz">etherpoke-2.0.2.tar.gz</a> (<a href="files/etherpoke-2.0.2.tar.gz.sig">signature</a>)</li>
+					<li> <a href="files/etherpoke-2.3.0.tar.gz">etherpoke-2.3.0.tar.gz</a> (<a href="files/etherpoke-2.3.0.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.3.0/Changelog">changelog</a>)</li>
+					<li> <a href="files/etherpoke-2.2.1.tar.gz">etherpoke-2.2.1.tar.gz</a> (<a href="files/etherpoke-2.2.1.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.2.1/Changelog">changelog</a>)</li>
+					<li> <a href="files/etherpoke-2.1.2.tar.gz">etherpoke-2.1.2.tar.gz</a> (<a href="files/etherpoke-2.1.2.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.1.2/Changelog">changelog</a>)</li>
+					<li> <a href="files/etherpoke-2.0.2.tar.gz">etherpoke-2.0.2.tar.gz</a> (<a href="files/etherpoke-2.0.2.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.0.2/Changelog">changelog</a>)</li>
+				</ul>
+			</div>
+
+			<h2 id="acknowledgments">Acknowledgments</h2>
+			<div class="content_section">
+				<p>
+					Even long before <em>etherpoke</em>'s inception, we have been standing on a giant's shoulder. We would like to acknowledge that fact by thanking to key projects we have relied most upon during the development.
+				</p>
+
+				<ul>
+					<li> <a href="http://www.gnu.org/">GNU project</a> </li>
+					<li> <a href="http://valgrind.org/">valgrind</a> </li>
+					<li> <a href="http://www.tcpdump.org/">tcpdump</a> </li>
+					<li> <a href="http://www.hyperrealm.com/libconfig/">libconfig</a> </li>
 				</ul>
 			</div>
 		</div>
