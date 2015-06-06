@@ -22,6 +22,35 @@
 			#footer { font-size:12px; text-align:center; }
 			.cmd { background-color:#EFEFEF; font-family:Courier; padding-left:4px; padding-right:4px; }
 		</style>
+
+		<script type="text/javascript">
+			var hist_entries = 4;
+
+			function show_history ()
+			{
+				var news_entries = document.getElementById ("news_section").getElementsByTagName ("p").length;
+
+				for ( i = hist_entries; i < news_entries; i++ ){
+					if ( ! document.getElementById ("news_section").getElementsByTagName ("p")[i] )
+						break;
+
+					document.getElementById ("news_section").getElementsByTagName ("p")[i].style.display = "block";
+				}
+			}
+
+			function hide_history ()
+			{
+				var news_entries = document.getElementById ("news_section").getElementsByTagName ("p").length;
+				var i = hist_entries;
+
+				for ( i = hist_entries; i < news_entries; i++ ){
+					if ( ! document.getElementById ("news_section").getElementsByTagName ("p")[i] )
+						break;
+
+					document.getElementById ("news_section").getElementsByTagName ("p")[i].style.display = "none";
+				}
+			}
+		</script>
 	</head>
 	
 	<body>
@@ -45,7 +74,11 @@
 			</div>
 
 			<h2 id="news">News</h2>
-			<div class="content_section">
+			<div id="news_section" class="content_section">
+				<p>
+					<strong>2015-06-02</strong> &#8212; Version <strong>2.3.1</strong> released.
+				</p>
+
 				<p>
 					<strong>2015-05-09</strong> &#8212; Version <strong>2.3.0</strong> released.
 				</p>
@@ -81,6 +114,10 @@
 				<p>
 					<strong>2014-11-09</strong> &#8212; Version <strong>2.0.2</strong> released.
 				</p>
+
+				<div style="text-align:center;">
+					<a href="#" onclick="show_history (); this.style.display = 'none'; return false;">(show all)</a>
+				</div>
 			</div>
 			
 			<h2 id="description">Description</h2>
@@ -203,7 +240,7 @@ Options:
 				</p>
 				
 				<ul>
-					<li> <a href="files/etherpoke-2.3.0.tar.gz">etherpoke-2.3.0.tar.gz</a> (<a href="files/etherpoke-2.3.0.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.3.0/Changelog">changelog</a>)</li>
+					<li> <a href="files/etherpoke-2.3.1.tar.gz">etherpoke-2.3.1.tar.gz</a> (<a href="files/etherpoke-2.3.1.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.3.1/Changelog">changelog</a>)</li>
 					<li> <a href="files/etherpoke-2.2.1.tar.gz">etherpoke-2.2.1.tar.gz</a> (<a href="files/etherpoke-2.2.1.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.2.1/Changelog">changelog</a>)</li>
 					<li> <a href="files/etherpoke-2.1.2.tar.gz">etherpoke-2.1.2.tar.gz</a> (<a href="files/etherpoke-2.1.2.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.1.2/Changelog">changelog</a>)</li>
 					<li> <a href="files/etherpoke-2.0.2.tar.gz">etherpoke-2.0.2.tar.gz</a> (<a href="files/etherpoke-2.0.2.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.0.2/Changelog">changelog</a>)</li>
@@ -224,5 +261,9 @@ Options:
 				</ul>
 			</div>
 		</div>
+
+		<script type="text/javascript">
+			hide_history ();
+		</script>
 	</body>
 </html>
