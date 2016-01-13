@@ -6,9 +6,8 @@
 			h1 { font-size:200%; margin-bottom:25px; }
 			h2 { font-size:140%; margin-bottom:5px; padding-bottom:5px; border-bottom:1px solid #939393; }
 			h3 { font-size:110%; margin-bottom:5px; padding-bottom:5px; }
-			a { color:#2D6FAC; }
-			a:visited { color:#2D6FAC; }
-			a:hover { text-decoration:none; }
+			a { text-decoration:none; color:#2D6FAC; }
+			a:hover { text-decoration:underline; }
 			p { text-align:justify; }
 			#menu { width:100%; margin:0 auto; margin-bottom:40px; }
 			#menu .menu_item {  }
@@ -74,6 +73,10 @@
 			<h2 id="news">News</h2>
 			<div id="news_section" class="content_section">
 				<p>
+					<strong>2016-01-13</strong> &#8212; Version <strong>2.5.0</strong> released.
+				</p>
+
+				<p>
 					<strong>2015-11-25</strong> &#8212; Version <strong>2.4.0</strong> released.
 				</p>
 
@@ -129,19 +132,19 @@
 				<p> <em>etherpoke</em> defines three events to which a hook (system command) can be assigned. The event hook can be any program installed in the system.</p>
 
 				<ul>
-					<li> <strong>SESSION_BEGIN</strong> is triggered when the first packet matching the filter rule is captured.</li>
-					<li> <strong>SESSION_END</strong> is triggered when the time since the last matching packet was captured exceeds the session timeout.</li>
-					<li> <strong>SESSION_ERROR</strong> is triggered when it is no longer possible to proceed with packet capture, most likely due to network interface error. This event cancels out any future triggers of <strong>SESSION_END</strong>, until <strong>SESSION_BEGIN</strong> is triggered again.</li>
+					<li> <u>SESSION_BEGIN</u> is triggered when the first packet matching the filter rule is captured.</li>
+					<li> <u>SESSION_END</u> is triggered when the time since the last matching packet was captured exceeds the session timeout.</li>
+					<li> <u>SESSION_ERROR</u> is triggered when it is no longer possible to proceed with packet capture, most likely due to network interface error. This event cancels out any future triggers of <u>SESSION_END</u>, until <u>SESSION_BEGIN</u> is triggered again.</li>
 				</ul>
 
-				<p>Since version 2.3.0, <em>etherpoke</em> has support for socket notifications (<strong>TCP</strong> protocol), allowing remote clients to be notified when any of the events is triggered.</p>
+				<p>Since version 2.3.0, <em>etherpoke</em> supports socket notifications (TCP/IP protocol), allowing remote clients to be notified when one of the events is triggered.</p>
 	
-				<p> <em>etherpoke</em> is <strong>free software</strong> licensed under <strong>GNU GPL3</strong>.</p>
+				<p> <em>etherpoke</em> is free software licensed under <strong>GNU GPL3</strong>.</p>
 			</div>
 			
 			<h2 id="installation">Installation</h2>
 			<div class="content_section">
-				<p>If <em>etherpoke</em> is not available in the repository of your favorite <strong>GNU/Linux</strong> distribution, you may
+				<p>If <em>etherpoke</em> is not available in the repository of your favorite GNU/Linux distribution, you may
 				consider installing <em>etherpoke</em> from the source.</p>
 				
 				<h3>From the source:</h3>
@@ -165,57 +168,48 @@
 			<h2 id="configuration">Configuration</h2>
 			<div class="content_section">
 				<p>
-					<em>etherpoke</em> uses <a href="http://www.hyperrealm.com/libconfig/">libconfig</a> for parsing the configuration file.
+					<em>etherpoke</em> uses <a href="http://www.hyperrealm.com/libconfig/">libconfig</a> to parse a configuration file.
 				</p>
 
-				<h3>Options</h3>
-
 				<ul>
-					<li> <span class="cmd">interface</span> tells which interface to use for the packet capture.</li>
-					<li> <span class="cmd">match</span> defines a packet filter program to use (see <a href="http://biot.com/capstats/bpf.html">BPF syntax</a>). If this option is ommited, all traffic captured by the <span class="cmd">interface</span> is available.</li>
-					<li> <span class="cmd">session_begin</span> defines a command that will be executed when the event <strong>SESSION_BEGIN</strong> is triggered.</li>
-					<li> <span class="cmd">session_end</span> defines a command that will be executed when the event <strong>SESSION_END</strong> is triggered.</li>
-					<li> <span class="cmd">session_error</span> defines a command that will be executed when the event <strong>SESSION_ERROR</strong> is triggered.</li>
-					<li> <span class="cmd">session_timeout</span> defines a session timeout in seconds. If the time specified is exceeded, the event <strong>SESSION_END</strong> is triggered.</li>
-					<li> <span class="cmd">monitor_mode</span> enables/disables the monitor mode. This mode is supported only by some Wireless network interfaces. By default, this mode is disabled.</li>
-					<li> <span class="cmd">notify_sock</span> enables/disables socket notification. By default socket notification is disabled.</li>
+					<li> <span class="cmd">interface</span> tells which interface to use for packet capture.</li>
+					<li> <span class="cmd">match</span> defines a packet filter program to use (see <a href="http://biot.com/capstats/bpf.html">BPF syntax</a>). If this option is ommited, all traffic captured on the <span class="cmd">interface</span> is available.</li>
+					<li> <span class="cmd">session_begin</span> defines a command that shall be executed when the event <u>SESSION_BEGIN</u> is triggered.</li>
+					<li> <span class="cmd">session_end</span> defines a command that shall be executed when the event <u>SESSION_END</u> is triggered.</li>
+					<li> <span class="cmd">session_error</span> defines a command that shall be executed when the event <u>SESSION_ERROR</u> is triggered.</li>
+					<li> <span class="cmd">session_timeout</span> defines a session timeout in seconds. Once the value is exceeded, the event <u>SESSION_END</u> is triggered.</li>
+					<li> <span class="cmd">monitor_mode</span> enables/disables the monitor mode. Supported only by some Wireless network interfaces. By default, monitor mode is disabled.</li>
+					<li> <span class="cmd">notify_sock</span> enables/disables socket notifications. By default socket notifications are disabled.</li>
 					<li> <span class="cmd">notify_exec</span> enables/disables event hook execution. By default event hook execution is enabled.</li>
 					<li> <span class="cmd">link_type</span> overrides the default link-layer header type. Defaults: EN10MB, IEEE802_11_RADIO in case the <span class="cmd">monitor_mode</span> is enabled. Complete list of supported values can be found on <a href="http://www.tcpdump.org/linktypes.html#project-list">tcpdump homepage</a>.</li>
 				</ul>
 
-				<h3>Example #1</h3>
+				<h3>Example #1: Event hooks only (exec)</h3>
 
 				<pre>
-ambient_jukebox: {
+ambient: {
 	interface = "wlan1";
 	match = "ether src f8:2f:a8:b0:c9:11 or ether src 08:9e:01:f5:43:16";
 	session_begin = "/usr/bin/audacious /home/music/dxhr_adam_jensen_apartment.mp3";
 	session_end = "/usr/bin/audacious --stop";
-	session_error = "/bin/false";
 	session_timeout = 600;
-	monitor_mode = true;
 };</pre>
-				<p>This configuration states that we are interested only in packets originating from devices with hardware address <span class="cmd">f8:2f:a8:b0:c9:11</span> or <span class="cmd">08:9e:01:f5:43:16</span>, captured on the interface <span class="cmd">wlan1</span>. If the first packet from any of these devices is captured, music player will start playing the mp3 file. If no packets are captured for period longer than 10 minutes (600 seconds), the music player will stop.</p>
+				<p>This configuration states that we are interested only in packets originating from devices with hardware address <span class="cmd">f8:2f:a8:b0:c9:11</span> or <span class="cmd">08:9e:01:f5:43:16</span>, captured on the interface <span class="cmd">wlan1</span>. If the first packet from any of these devices is captured, music player will start playing local mp3 file. After 600 seconds since the last seen packet originating from those devices, the music player will stop.</p>
 
-				<p>The packet capture is done in the monitor mode, so the devices can be detected from the regular personal computer. With monitor mode disabled, only broadcast IP packets and EAP/EAPOL packets could be captured, causing frequent session timeouts with target devices still communicating.</p>
-
-				<h3>Example #2</h3>
+				<h3>Example #2: TCP/IP notifications only (sock)</h3>
 
 				<pre>
-pipboy3000: {
+ambient_remote: {
 	interface = "wlan1";
-	match = "ether src 48:9d:24:66:a7:97";
-	session_begin = "/bin/false";
-	session_end = "/bin/false";
-	session_error = "/bin/false";
+	match = "ether src f8:2f:a8:b0:c9:11 or ether src 08:9e:01:f5:43:16";
+	session_begin = "/usr/bin/audacious /home/music/dxhr_adam_jensen_apartment.mp3";
+	session_end = "/usr/bin/audacious --stop";
 	session_timeout = 600;
-	monitor_mode = true;
 	notify_exec = false;
 	notify_sock = true;
 };</pre>
 				<p>
-					The configuration above showcases the TCP notifications. We are looking for data originating from a device with hardware address <span class="cmd">48:9d:24:66:a7:97</span>, captured on the interface <span class="cmd">wlan1</span>. Unlike the previous example, this one disables execution of defined event hooks with option <span class="cmd">notify_exec</span> set to false, and instead enables the socket notifications with option <span class="cmd">notify_sock</span> set to true. When any of the events is triggered, a message is delivered to connected clients.
-				</p>
+					The configuration above showcases the TCP/IP notifications. Again we are looking for data originating from devices with hardware address <span class="cmd">f8:2f:a8:b0:c9:11</span> or <span class="cmd">08:9e:01:f5:43:16</span>, captured on the interface <span class="cmd">wlan1</span>. Unlike the previous example, this one disables execution of defined event hooks with option <span class="cmd">notify_exec</span> set to false, and instead enables the socket notifications with option <span class="cmd">notify_sock</span> set to true. When any of the events is triggered, a message is delivered to connected clients.</p>
 
 				<p>
 					Please note, that <em>etherpoke</em> does not open TCP port automatically, instead it expects an argument to be provided on start. See <a href="#usage">Usage</a> for more information.
@@ -225,14 +219,15 @@ pipboy3000: {
 			<h2 id="usage">Usage</h2>
 			<div class="content_section">
 				<pre>
-Usage: etherpoke [OPTIONS] <FILE>
+Usage: etherpoke [OPTIONS] &lt;FILE&gt;
 
 Options:
-  -4                        use IPv4 only
-  -6                        use IPv6 only
+  -4                        bind to IPv4 address
+  -6                        bind to IPv6 address
   -t, --hostname=HOST:PORT  bind to address/hostname and port
   -d, --daemon              run as a daemon
   -m, --accept-max=NUM      accept maximum of NUM concurrent client connections
+  -V, --verbose             increase verbosity
   -h, --help                show this usage information
   -v, --version             show version information</pre>
 			</div>
@@ -240,15 +235,16 @@ Options:
 			<h2 id="download">Download</h2>
 			<div class="content_section">
 				<p>
-					<a href="https://github.com/erlcash/etherpoke">Latest changes</a> and all <a href="https://github.com/erlcash/etherpoke/releases">version releases</a> are always available in <em>etherpoke</em>'s git repository</a>.
+					<a href="https://github.com/erlcash/etherpoke">Latest changes</a> and all <a href="https://github.com/erlcash/etherpoke/releases">version releases</a> are available in <em>etherpoke</em>'s git repository</a>.
 				</p>
 				
 				<ul>
-					<li> <a href="files/etherpoke-2.4.0.tar.gz">etherpoke-2.4.0.tar.gz</a> (<a href="files/etherpoke-2.4.0.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.4.0/Changelog">changelog</a>)</li>
-					<li> <a href="files/etherpoke-2.3.1.tar.gz">etherpoke-2.3.1.tar.gz</a> (<a href="files/etherpoke-2.3.1.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.3.1/Changelog">changelog</a>)</li>
-					<li> <a href="files/etherpoke-2.2.1.tar.gz">etherpoke-2.2.1.tar.gz</a> (<a href="files/etherpoke-2.2.1.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.2.1/Changelog">changelog</a>)</li>
-					<li> <a href="files/etherpoke-2.1.2.tar.gz">etherpoke-2.1.2.tar.gz</a> (<a href="files/etherpoke-2.1.2.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.1.2/Changelog">changelog</a>)</li>
-					<li> <a href="files/etherpoke-2.0.2.tar.gz">etherpoke-2.0.2.tar.gz</a> (<a href="files/etherpoke-2.0.2.tar.gz.sig">signature</a>) (<a href="https://github.com/erlcash/etherpoke/blob/2.0.2/Changelog">changelog</a>)</li>
+					<li> <a href="files/etherpoke-2.5.0.tar.gz">etherpoke-2.5.0.tar.gz</a> <sup>[<a href="files/etherpoke-2.5.0.tar.gz.sig">signature</a>] [<a href="https://github.com/erlcash/etherpoke/blob/2.5.0/Changelog">changelog</a>]</sup> </li>
+					<li> <a href="files/etherpoke-2.4.0.tar.gz">etherpoke-2.4.0.tar.gz</a> <sup>[<a href="files/etherpoke-2.4.0.tar.gz.sig">signature</a>] [<a href="https://github.com/erlcash/etherpoke/blob/2.4.0/Changelog">changelog</a>]</sup> </li>
+					<li> <a href="files/etherpoke-2.3.1.tar.gz">etherpoke-2.3.1.tar.gz</a> <sup>[<a href="files/etherpoke-2.3.1.tar.gz.sig">signature</a>] [<a href="https://github.com/erlcash/etherpoke/blob/2.3.1/Changelog">changelog</a>]</sup> </li>
+					<li> <a href="files/etherpoke-2.2.1.tar.gz">etherpoke-2.2.1.tar.gz</a> <sup>[<a href="files/etherpoke-2.2.1.tar.gz.sig">signature</a>] [<a href="https://github.com/erlcash/etherpoke/blob/2.2.1/Changelog">changelog</a>]</sup> </li>
+					<li> <a href="files/etherpoke-2.1.2.tar.gz">etherpoke-2.1.2.tar.gz</a> <sup>[<a href="files/etherpoke-2.1.2.tar.gz.sig">signature</a>] [<a href="https://github.com/erlcash/etherpoke/blob/2.1.2/Changelog">changelog</a>]</sup> </li>
+					<li> <a href="files/etherpoke-2.0.2.tar.gz">etherpoke-2.0.2.tar.gz</a> <sup>[<a href="files/etherpoke-2.0.2.tar.gz.sig">signature</a>] [<a href="https://github.com/erlcash/etherpoke/blob/2.0.2/Changelog">changelog</a>]</sup> </li>
 				</ul>
 			</div>
 
